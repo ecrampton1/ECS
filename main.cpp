@@ -1,18 +1,16 @@
 #include "src/ECSRegistry.hpp"
+#include "src/ComponentsDef.hpp"
 
-namespace userdefined
-{
-// move these into a file
-ComponentStorage<Transform> gTransforms;
-ComponentStorage<Sprite> gSptires;
-ComponentStorage<Movement> gMovements;
-} // namespace userdefined
-
+// user define init of component storage
 void EcsRegistry::init()
 {
-    add(&userdefined::gTransforms);
-    add(&userdefined::gSptires);
-    add(&userdefined::gMovements);
+    static ComponentStorage<Transform> gTransforms;
+    static ComponentStorage<Sprite> gSptires;
+    static ComponentStorage<Movement> gMovements;
+
+    add(&gTransforms);
+    add(&gSptires);
+    add(&gMovements);
 }
 
 int main()

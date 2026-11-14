@@ -1,0 +1,10 @@
+{
+    "clangd.arguments": [
+        "--background-index",
+        "--clang-tidy",
+        "--completion-style=detailed",
+        "--compile-commands-dir=${workspaceRoot}/build"
+    ],
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+    "editor.formatOnSave": true
+}

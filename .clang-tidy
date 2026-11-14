@@ -1,0 +1,96 @@
+# clang-tidy configuration for SDL3 Proto
+# Based on CODING_STANDARDS.md — see that file for full conventions
+---
+Checks: >
+  clang-diagnostic-*,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  -modernize-avoid-c-arrays,
+  -modernize-concat-nested-namespaces,
+  -modernize-use-nodiscard,
+  readability-*,
+  -readability-braces-around-statements,
+  -readability-function-cognitive-complexity,
+  -readability-identifier-length,
+  -readability-implicit-bool-conversion,
+  -readability-isolate-declaration,
+  -readability-magic-numbers,
+  -readability-named-parameter,
+  -readability-redundant-access-specifiers,
+  -readability-simplify-boolean-expr,
+  -readability-static-accessed-through-instance,
+  -readability-uppercase-literal-suffix,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  performance-*,
+  -performance-enum-size,
+  misc-*,
+  -misc-no-recursion,
+  -misc-non-private-member-variables-in-classes,
+  -misc-include-cleaner,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-avoid-do-while,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-init-variables,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-vararg,
+  google-build-using-namespace,
+  google-readability-casting,
+  google-runtime-int,
+  llvm-header-guard,
+  -llvm-else-after-return,
+  -llvm-namespace-comment,
+  -llvm-qualified-auto,
+
+CheckOptions:
+  ########################################################################
+  # Naming conventions (CODING_STANDARDS.md Section 2)
+  ########################################################################
+  readability-identifier-naming.ClassCase: PascalCase
+  readability-identifier-naming.StructCase: PascalCase
+  readability-identifier-naming.FunctionCase: camelBack
+  readability-identifier-naming.MemberFunctionCase: lower_case
+  readability-identifier-naming.PrivateMemberCase: PascalCase
+  readability-identifier-naming.ProtectedMemberCase: PascalCase
+  readability-identifier-naming.PublicMemberCase: PascalCase
+  readability-identifier-naming.ConstantCase: UPPER_CASE
+  readability-identifier-naming.ConstantParameterCase: lower_case
+  readability-identifier-naming.LocalConstantCase: lower_case
+  readability-identifier-naming.ConstexprVariableCase: UPPER_CASE
+  readability-identifier-naming.EnumCase: PascalCase
+  readability-identifier-naming.EnumConstantCase: UPPER_CASE
+  readability-identifier-naming.NamespaceCase: aNy_CasE
+  readability-identifier-naming.TypedefCase: PascalCase
+  readability-identifier-naming.TypeAliasCase: PascalCase
+  readability-identifier-naming.TemplateParameterCase: PascalCase
+  readability-identifier-naming.GlobalVariableCase: camelBack
+  readability-identifier-naming.LocalVariableCase: lower_case
+  readability-identifier-naming.StaticVariableCase: camelBack
+  readability-identifier-naming.MacroDefinitionCase: UPPER_CASE
+  readability-identifier-naming.ParameterCase: lower_case
+
+  ########################################################################
+  # Style enforcement (CODING_STANDARDS.md Sections 8, 9, 12)
+  ########################################################################
+
+  # Single-argument constructors must be explicit
+  readability-implicit-conversion-multiply.Explicit: true
+
+  # Override spelling
+  modernize-use-override.OverrideSpelling: override
+  modernize-use-override.FinalSpelling: final
+
+  # Prefer using instead of typedef (Section 12)
+  modernize-use-using.IgnoreMacros: false
+
+  # Prefer make_shared/make_unique (Section 9)
+  modernize-make-shared.IgnoreMacros: true
+  modernize-make-unique.IgnoreMacros: true
+
+  # Acceptable integer types
+  google-runtime-int.TypeSuffix: _t
+
+...

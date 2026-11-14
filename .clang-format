@@ -1,0 +1,69 @@
+---
+# Based on SDL3 style, adapted for the project coding standards
+# See CODING_STANDARDS.md for full conventions
+
+
+AlignConsecutiveMacros: Consecutive
+AlignConsecutiveAssignments: None
+AlignConsecutiveBitFields: None
+AlignConsecutiveDeclarations: None
+AlignEscapedNewlines: Right
+AlignOperands: Align
+AlignTrailingComments: true
+
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortEnumsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+
+PackConstructorInitializers: Never
+
+# Custom brace breaking per CODING_STANDARDS.md section 5:
+# opening brace on new line for functions, classes, enums, structs, namespaces;
+# same line for control statements.
+BreakBeforeBraces: Allman
+BreakTemplateDeclarations: Yes
+
+# Make the closing brace of container literals go to a new line
+Cpp11BracedListStyle: false
+
+# Never reorder includes (CODING_STANDARDS.md section 5)
+IncludeBlocks: Preserve
+SortIncludes: Never
+
+# No column limit (CODING_STANDARDS.md section 1)
+ColumnLimit: 110
+
+# 4-space indentation (CODING_STANDARDS.md section 1)
+IndentWidth: 4
+ContinuationIndentWidth: 4
+IndentCaseLabels: false
+IndentCaseBlocks: false
+IndentGotoLabels: true
+IndentPPDirectives: None
+IndentExternBlock: NoIndent
+
+# Pointer alignment: Left (CODING_STANDARDS.md section 5)
+PointerAlignment: Left
+SpaceAfterCStyleCast: false
+SpacesInCStyleCastParentheses: false
+SpacesInConditionalStatement: false
+SpacesInContainerLiterals: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
+SpaceBeforeParens: ControlStatements
+SpaceAroundPointerQualifiers: Default
+SpaceInEmptyBlock: false
+SpaceInEmptyParentheses: false
+
+# Line endings: LF only (CODING_STANDARDS.md section 1)
+UseCRLF: false
+UseTab: Never

@@ -80,27 +80,30 @@ class EntityManager
             mAvailableEntities.pop_back();
             e.incrementVersion();
         }
+        mVersions[e.getId()] = e.getVersion();
         mSignatures[e.getId()] = Entity::ENTITY_ACTIVE;
+        ++mActiveEntities;
         return e;
     }
 
-    Entity::EntityType getNumberOfEntities() { return mNumberEntries - mAvailableEntities.size(); }
+    Entity::EntityType getNumberOfEntities() const { return mActiveEntities; }
 
     void removeEntity(Entity e)
     {
-        if (e.getId() < mSignatures.size())
-        {
-            mSignatures[e.getId()] = 0x00;
-            mAvailableEntities.push_back(e);
-        }
+        if (!isCurrent(e))
+            return;
+
+        mSignatures[e.getId()] = 0x00;
+        mAvailableEntities.push_back(e);
+        --mActiveEntities;
     }
 
-    bool queryEntity(Entity e, Components c) const
+    bool queryEntity(Entity e, Components c) const { return isCurrent(e) && mSignatures[e.getId()].test(c); }
+
+    void clearEntityComponent(Entity e, Components c)
     {
-        bool ret = false;
-        if (e.getId() < mSignatures.size())
-            ret = mSignatures[e.getId()].test(Components::MAX_COMPONENTS) && mSignatures[e.getId()].test(c);
-        return ret;
+        if (isCurrent(e))
+            mSignatures[e.getId()].reset(c);
     }
 
     void setEntity(Entity e, Components c)
@@ -116,9 +119,18 @@ class EntityManager
     }
 
   private:
+    bool isCurrent(Entity e) const
+    {
+        const auto id = e.getId();
+        return id < mSignatures.size() && mSignatures[id].test(Components::MAX_COMPONENTS) &&
+               mVersions[id] == e.getVersion();
+    }
+
     Entity::EntityType mNumberEntries{ 0 };
+    Entity::EntityType mActiveEntities{ 0 };
     std::vector<Entity> mAvailableEntities;
     std::array<Entity::Signature, Entity::MAX_ENTITIES> mSignatures{};
+    std::array<Entity::VersionType, Entity::MAX_ENTITIES> mVersions{};
 };
 
 using ComponentIdx = uint16_t;
@@ -151,8 +163,9 @@ class ComponentStorage : public ComponentBase
 
         if (mComponents.size() == mComponents.capacity())
         {
-            mComponents.resize(mComponents.size() * SIZE_MULTIPLIER);
-            mEntities.resize(mComponents.size() * SIZE_MULTIPLIER);
+            const std::size_t newCapacity = mComponents.empty() ? 1 : mComponents.size() * SIZE_MULTIPLIER;
+            mComponents.reserve(newCapacity);
+            mEntities.reserve(newCapacity);
         }
         mEntityMap[e] = mComponents.size();
         mComponents.emplace_back(std::forward<Args>(args)...);

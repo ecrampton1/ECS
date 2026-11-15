@@ -65,6 +65,7 @@ class EcsRegistry
         assert(mInitialized == true && "Component Storage not initialized");
         auto& c_store = getStorage<T>();
         c_store.remove(e);
+        mEntityManager.clearEntityComponent(e, T::TYPE);
     }
 
     template <class T, typename... Args>

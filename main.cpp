@@ -1,20 +1,6 @@
 #include "src/ECSRegistry.hpp"
 #include "src/ComponentsDef.hpp"
 
-// user define init of component storage
-void EcsRegistry::init()
-{
-    static ComponentStorage<Transform> gTransforms;
-    static ComponentStorage<Sprite> gSprites;
-    static ComponentStorage<Movement> gMovements;
-
-    add(&gTransforms);
-    add(&gSprites);
-    add(&gMovements);
-
-    mInitialized = true;
-}
-
 int main()
 {
     // init();

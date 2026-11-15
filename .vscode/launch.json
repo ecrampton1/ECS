@@ -30,6 +30,15 @@
             "program": "${workspaceRoot}/build/Debug/ecs",
             "args": [],
             "cwd": "${workspaceRoot}"
+        },
+        {
+            "name": "Debug ECS Test",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/ecs_tests",
+            "args": ["--gtest_filter=ComponentStorageTest.AddingPastInitialCapacityKeepsLogicalSize"],
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb"
         }
     ]
 }

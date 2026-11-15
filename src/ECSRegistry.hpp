@@ -13,6 +13,18 @@ class EcsRegistry
         return reg;
     }
 
+    void resetForTesting()
+    {
+        for (auto* list : mStorageList)
+        {
+            if (list != nullptr)
+                list->clear();
+        }
+        mStorageList = {};
+        mEntityManager = EntityManager{};
+        mInitialized = false;
+    }
+
     // move this into user defined file
     void init();
 
@@ -42,7 +54,8 @@ class EcsRegistry
         mEntityManager.removeEntity(e);
         for (auto* list : mStorageList)
         {
-            list->remove(e);
+            if (list != nullptr)
+                list->remove(e);
         }
     }
 
@@ -70,6 +83,13 @@ class EcsRegistry
         return getStorage<T>().get(e);
     }
 
+    template <class T>
+    bool hasComponent(Entity e) const
+    {
+        assert(mInitialized == true && "Component Storage not initialized");
+        return mEntityManager.queryEntity(e, T::TYPE);
+    }
+
     void printSignature(Entity e) { mEntityManager.printSignature(e); }
 
   private:
@@ -77,7 +97,7 @@ class EcsRegistry
 
     bool mInitialized{ false };
     EntityManager mEntityManager;
-    std::array<ComponentBase*, Components::MAX_COMPONENTS> mStorageList;
+    std::array<ComponentBase*, Components::MAX_COMPONENTS> mStorageList{};
 };
 
 #endif

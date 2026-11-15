@@ -11,13 +11,29 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+include(CTest)
+
+add_library(ecs_core STATIC src/ECSComponentSetup.cpp)
+target_include_directories(ecs_core PUBLIC ./src)
 
 # Create your game executable target as usual
 add_executable(${PROJECT_NAME} main.cpp 
 
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC ./src)
+target_link_libraries(${PROJECT_NAME} PRIVATE ecs_core)
 
+if(BUILD_TESTING)
+    find_package(GTest REQUIRED)
+
+    add_executable(ecs_tests
+        tests/EntityManagerTests.cpp
+        tests/ComponentStorageTests.cpp
+        tests/EcsRegistryTests.cpp
+    )
+
+    target_link_libraries(ecs_tests PRIVATE ecs_core GTest::gtest_main)
+    add_test(NAME ecs_tests COMMAND ecs_tests)
+endif()
 
 

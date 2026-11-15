@@ -95,7 +95,7 @@ class EntityManager
         }
     }
 
-    bool queryEntity(Entity e, Components c)
+    bool queryEntity(Entity e, Components c) const
     {
         bool ret = false;
         if (e.getId() < mSignatures.size())

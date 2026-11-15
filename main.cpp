@@ -5,12 +5,14 @@
 void EcsRegistry::init()
 {
     static ComponentStorage<Transform> gTransforms;
-    static ComponentStorage<Sprite> gSptires;
+    static ComponentStorage<Sprite> gSprites;
     static ComponentStorage<Movement> gMovements;
 
     add(&gTransforms);
-    add(&gSptires);
+    add(&gSprites);
     add(&gMovements);
+
+    mInitialized = true;
 }
 
 int main()
@@ -29,10 +31,10 @@ int main()
     // auto& trans = reg.getStorage<Transform>();
     // trans.add(e1, Transform{ 1.0, 1.0, 1.0, 0.0 });
     auto& trans = reg.addComponent<Transform>(e1, Transform{ 1.0, 1.0, 1.0, 0.0 });
-    trans.print();
+    std::cout << trans.toString() << std::endl;
 
     auto& trans_dup = reg.getComponent<Transform>(e1);
-    trans_dup.print();
+    std::cout << trans_dup.toString() << std::endl;
 
     reg.printSignature(e1);
 }

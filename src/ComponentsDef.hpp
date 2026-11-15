@@ -1,7 +1,7 @@
 #ifndef COMPONENTS_DEF_HPP_
 #define COMPONENTS_DEF_HPP_
 #include "ECS.hpp"
-#include <iostream>
+#include <sstream>
 
 struct Transform
 {
@@ -10,13 +10,16 @@ struct Transform
     float scale;
     float rotation;
 
-    void print()
+    // Debug strings
+    std::string toString() const
     {
-        std::cout << std::to_string(x) << "," << std::to_string(y) << "," << std::to_string(scale) << ","
-                  << std::to_string(rotation) << std::endl;
+        std::stringstream ss;
+        ss << std::to_string(x) << "," << std::to_string(y) << "," << std::to_string(scale) << ","
+           << std::to_string(rotation);
+        return ss.str();
     }
 
-    static inline Components type = Components::TRANSFORM;
+    static const Components TYPE = Components::TRANSFORM;
 };
 
 struct Sprite
@@ -24,12 +27,15 @@ struct Sprite
     size_t render_itr;
     size_t sprite;
 
-    void print()
+    // Debug strings
+    std::string toString() const
     {
-        std::cout << std::to_string(render_itr) << "," << std::to_string(sprite) << "," << std::endl;
+        std::stringstream ss;
+        ss << std::to_string(render_itr) << "," << std::to_string(sprite);
+        return ss.str();
     }
 
-    static inline Components type = Components::SPRITE;
+    static const Components TYPE = Components::SPRITE;
 };
 
 struct Movement
@@ -37,12 +43,15 @@ struct Movement
     float velocity;
     float acceleration;
 
-    void print()
+    // Debug strings
+    std::string toString() const
     {
-        std::cout << std::to_string(velocity) << "," << std::to_string(acceleration) << "," << std::endl;
+        std::stringstream ss;
+        ss << std::to_string(velocity) << "," << std::to_string(acceleration);
+        return ss.str();
     }
 
-    static inline Components type = Components::MOVEMENT;
+    static const Components TYPE = Components::MOVEMENT;
 };
 
 #endif

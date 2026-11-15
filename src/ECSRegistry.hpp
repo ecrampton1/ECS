@@ -19,23 +19,26 @@ class EcsRegistry
     template <class T>
     void add(ComponentStorage<T>* store)
     {
-        mStorageList.at(T::type) = store;
+        mStorageList.at(T::TYPE) = store;
     }
 
     template <class T>
     ComponentStorage<T>& getStorage()
     {
-        return *static_cast<ComponentStorage<T>*>(mStorageList.at(T::type));
+        assert(mInitialized == true && "Component Storage not initialized");
+        return *static_cast<ComponentStorage<T>*>(mStorageList.at(T::TYPE));
     }
 
     Entity createEntity()
     {
+        assert(mInitialized == true && "Component Storage not initialized");
         auto e = mEntityManager.createEntity();
         return e;
     }
 
     void removeEntity(Entity e)
     {
+        assert(mInitialized == true && "Component Storage not initialized");
         mEntityManager.removeEntity(e);
         for (auto* list : mStorageList)
         {
@@ -43,12 +46,21 @@ class EcsRegistry
         }
     }
 
+    template <class T>
+    void removeComponent(Entity e)
+    {
+        assert(mInitialized == true && "Component Storage not initialized");
+        auto& c_store = getStorage<T>();
+        c_store.remove(e);
+    }
+
     template <class T, typename... Args>
     T& addComponent(Entity e, Args&&... args)
     {
+        assert(mInitialized == true && "Component Storage not initialized");
         auto& c_store = getStorage<T>();
         auto& c = c_store.add(e, T{ std::forward<Args>(args)... });
-        mEntityManager.setEntity(e, T::type);
+        mEntityManager.setEntity(e, T::TYPE);
         return c;
     }
 
@@ -63,6 +75,7 @@ class EcsRegistry
   private:
     EcsRegistry() = default;
 
+    bool mInitialized{ false };
     EntityManager mEntityManager;
     std::array<ComponentBase*, Components::MAX_COMPONENTS> mStorageList;
 };

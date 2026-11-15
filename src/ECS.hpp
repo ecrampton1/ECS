@@ -46,7 +46,7 @@ class Entity
 
     static constexpr EntityType MAX_ENTITIES = ENTITY_MASK;
 
-    EntityType getId() const { return mValue & (ENTITY_MASK << ENTITY_SHIFT); }
+    EntityType getId() const { return (mValue >> ENTITY_SHIFT) & ENTITY_MASK; }
     VersionType getVersion() const { return (mValue >> VERSION_SHIFT) & VERSION_MASK; }
     EntityType getValue() const { return mValue; }
 
@@ -88,21 +88,31 @@ class EntityManager
 
     void removeEntity(Entity e)
     {
-        assert(e.getId() < getNumberOfEntities() && &"Entity out of range");
+        if (e.getId() < mSignatures.size())
+        {
+            mSignatures[e.getId()] = 0x00;
+            mAvailableEntities.push_back(e);
+        }
+    }
 
-        mSignatures[e.getId()] = 0x00;
+    bool queryEntity(Entity e, Components c)
+    {
+        bool ret = false;
+        if (e.getId() < mSignatures.size())
+            ret = mSignatures[e.getId()].test(Components::MAX_COMPONENTS) && mSignatures[e.getId()].test(c);
+        return ret;
     }
 
     void setEntity(Entity e, Components c)
     {
         assert(e.getId() < mSignatures.size() && "Entity ID outside of bounds");
-        mSignatures[e] |= (1 << c);
+        mSignatures[e.getId()] |= (1 << c);
     }
 
     void printSignature(Entity e)
     {
         assert(e.getId() < mSignatures.size() && "Entity ID outside of bounds");
-        std::cout << mSignatures[e] << std::endl;
+        std::cout << mSignatures[e.getId()] << std::endl;
     }
 
   private:
@@ -111,7 +121,7 @@ class EntityManager
     std::array<Entity::Signature, Entity::MAX_ENTITIES> mSignatures{};
 };
 
-using ComponentId = uint16_t;
+using ComponentIdx = uint16_t;
 
 class ComponentBase
 {
@@ -127,7 +137,7 @@ class ComponentStorage : public ComponentBase
 {
 
   public:
-    ComponentStorage<Component>()
+    ComponentStorage()
     {
         mComponents.reserve(INIT_SIZE);
         mEntities.reserve(INIT_SIZE);
@@ -139,7 +149,7 @@ class ComponentStorage : public ComponentBase
         assert(mEntityMap.find(e) == mEntityMap.end() && "Component added to existing entity");
         assert(mComponents.size() < MAX_SIZE && "Component size exceeded");
 
-        if (mComponents.size() == mComponents.size())
+        if (mComponents.size() == mComponents.capacity())
         {
             mComponents.resize(mComponents.size() * SIZE_MULTIPLIER);
             mEntities.resize(mComponents.size() * SIZE_MULTIPLIER);
@@ -198,7 +208,7 @@ class ComponentStorage : public ComponentBase
     // stores the component and the version, version if component and index was deleted before
     std::vector<Component> mComponents;
     std::vector<Entity> mEntities;
-    std::unordered_map<Entity::EntityType, ComponentId> mEntityMap;
+    std::unordered_map<Entity::EntityType, ComponentIdx> mEntityMap;
 };
 
 /*class ComponentManager

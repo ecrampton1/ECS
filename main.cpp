@@ -1,5 +1,5 @@
-#include "src/ECSRegistry.hpp"
-#include "src/ComponentsDef.hpp"
+#include "inc/ECSRegistry.hpp"
+#include "ComponentsDef.hpp"
 
 int main()
 {

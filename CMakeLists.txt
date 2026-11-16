@@ -13,8 +13,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(CTest)
 
-add_library(ecs_core STATIC src/ECSComponentSetup.cpp)
-target_include_directories(ecs_core PUBLIC ./src)
+add_library(ecs_core STATIC ./ECSComponentSetup.cpp)
+target_include_directories(ecs_core PUBLIC ./inc ./)
 
 # Create your game executable target as usual
 add_executable(${PROJECT_NAME} main.cpp 

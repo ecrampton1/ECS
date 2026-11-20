@@ -44,17 +44,23 @@ class Entity
     static constexpr VersionType VERSION_SHIFT = 16;
     static constexpr EntityType VERSION_INCREMENT = 1 << VERSION_SHIFT;
 
-    static constexpr EntityType MAX_ENTITIES = ENTITY_MASK;
+    static constexpr EntityType MAX_ENTITIES = ENTITY_MASK - 1;
+    static constexpr EntityType UNDEFINED_ENTITY = ENTITY_MASK;
 
     EntityType getId() const { return (mValue >> ENTITY_SHIFT) & ENTITY_MASK; }
     VersionType getVersion() const { return (mValue >> VERSION_SHIFT) & VERSION_MASK; }
     EntityType getValue() const { return mValue; }
+    bool isUndefined() const { return (getValue() == UNDEFINED_ENTITY); }
 
     // return true if both id and version match
     bool operator==(const Entity& other) const { return mValue == other.mValue; }
     operator uint32_t() const { return mValue; }
 
-    // Entity() = default;
+    Entity(Entity::EntityType val)
+        : mValue(val)
+    {
+    }
+    Entity() = default;
     // Entity(Entity& e) = default;
 
   private:
@@ -68,7 +74,7 @@ class EntityManager
     EntityManager() = default;
     Entity createEntity()
     {
-        Entity e{};
+        Entity e;
         if (mAvailableEntities.empty())
         {
             assert((mNumberEntries < Entity::MAX_ENTITIES) && "Max Entries created");
